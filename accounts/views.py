@@ -1,4 +1,5 @@
 from rest_framework import generics, status
+from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -7,6 +8,7 @@ from accounts.serializers import SignUpSerializer
 
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request:Request):
         data = request.data

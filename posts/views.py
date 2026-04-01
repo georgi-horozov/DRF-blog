@@ -1,15 +1,22 @@
-# from rest_framework import generics, mixins, status
-# from rest_framework.decorators import api_view
+from rest_framework import viewsets
+
 # from rest_framework.request import Request
 # from rest_framework.response import Response
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-
 from posts.serializers import PostSerializer
 
 from .models import Post
 
+# from rest_framework.decorators import api_view
+# from rest_framework.permissions import (
+#     # AllowAny,
+#     # IsAdminUser,
+#     IsAuthenticated,
+#     # IsAuthenticatedOrReadOnly,
+# )
+from .permissions import AuthorOrReadOnly, ReadOnly
+
 # @api_view(http_method_names=["GET", "POST"])
+# @permission_classes([AllowAny])
 # def homepage(request:Request):
 #     response={"message": "Hello World!"}
 #     return Response(data=response, status=status.HTTP_200_OK)
@@ -49,11 +56,13 @@ from .models import Post
 class PostViewset(viewsets.ModelViewSet):
     # queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AuthorOrReadOnly]
 
     def get_queryset(self):
+        if self.request.user.is_authenticated:
         # Връща само постовете на текущия user
-        return Post.objects.filter(author=self.request.user)
+            return Post.objects.filter(author=self.request.user)
+        return Post.objects.all()
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
