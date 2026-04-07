@@ -13,7 +13,7 @@ from .models import Post
 #     IsAuthenticated,
 #     # IsAuthenticatedOrReadOnly,
 # )
-from .permissions import AuthorOrReadOnly, ReadOnly
+from .permissions import AuthorOrReadOnly
 
 # @api_view(http_method_names=["GET", "POST"])
 # @permission_classes([AllowAny])
